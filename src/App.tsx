@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 
 import io from 'socket.io-client'
 
-const socket = io('localhost:3005')
+const socket = io(import.meta.env.VITE_SOCKET_URL || 'localhost:3005')
 
 function App() {
     const [voted, setVoted] = useState<'none' | 'cat' | 'dog'>('none')
     const [votesCat, setVotesCat] = useState(0)
     const [votesDog, setVotesDog] = useState(0)
+
+    console.log(import.meta.env.VITE_SOCKET_URL)
 
     useEffect(() => {
         socket.on('message', data => {
