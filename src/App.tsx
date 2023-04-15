@@ -25,10 +25,19 @@ function App() {
     function vote(who: 'cat' | 'dog' | 'none') {
         if (voted === who) return
         //if changing vote or removing the vote first need to unvote
-        if (voted !== 'none' || who === 'none') socket.emit('unvote', voted)
+        if (voted !== 'none' || who === 'none') {
+            const previousVoted = voted
+            socket.emit('unvote', previousVoted)
+
+            //decrease previous voted with 1
+            previousVoted === 'dog' ? setVotesDog(o => o - 1) : setVotesCat(o => o - 1)
+        }
 
         setVoted(who)
         socket.emit('vote', who)
+
+        //increase vote by 1
+        who === 'dog' ? setVotesDog(o => o + 1) : setVotesCat(o => o + 1)
     }
 
     const votesPercent = {
