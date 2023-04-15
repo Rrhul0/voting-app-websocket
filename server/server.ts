@@ -1,8 +1,18 @@
 import { Server } from 'socket.io'
+import { config } from 'dotenv'
 
 const votes = { cat: 0, dog: 0 }
 
-const io = new Server({ cors: { origin: ['http://localhost:5173'] } })
+config()
+
+const corsOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    process.env.ORIGIN1 || '',
+    process.env.ORIGIN2 || '',
+]
+
+const io = new Server({ cors: { origin: corsOrigins } })
 
 io.on('connection', function (socket) {
     console.log('connect: ', socket.id)
@@ -15,11 +25,13 @@ io.on('connection', function (socket) {
     })
     socket.on('vote', (who: 'dog' | 'cat') => {
         votes[who]++
-        io.emit('votes', votes)
+        socket.broadcast.emit('votes', votes)
+        // io.emit('votes', votes)
     })
     socket.on('unvote', (who: 'dog' | 'cat') => {
         votes[who]--
-        io.emit('votes', votes)
+        socket.broadcast.emit('votes', votes)
+        // io.emit('votes', votes)
     })
 })
 io.listen(3005)
