@@ -35,4 +35,4 @@ io.on('connection', function (socket) {
         // io.emit('votes', votes)
     })
 })
-io.listen(3005)
+io.listen(Number(process.env.PORT) || 3005)
