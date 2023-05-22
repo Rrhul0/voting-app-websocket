@@ -13,8 +13,9 @@ const corsOrigins = [
 ]
 
 const io = new Server({ cors: { origin: corsOrigins } })
-
+console.log('here')
 io.on('connection', function (socket) {
+    console.log('here 2')
     console.log('connect: ', socket.id)
     io.emit('votes', votes)
     socket.on('hello!', function () {
